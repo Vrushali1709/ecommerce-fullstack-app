@@ -1,13 +1,13 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import MinimalTabBar from '../../components/navigation/MinimalTabBar';
 
 export default function TabsLayout() {
   return (
     <Tabs
-      tabBar={(props) => <MinimalTabBar {...props} />}
+      tabBar={() => null}
       screenOptions={{
         headerShown: false,
+        tabBarStyle: { display: 'none' },
       }}
     >
       <Tabs.Screen
@@ -46,4 +46,4 @@ export default function TabsLayout() {
       />
     </Tabs>
   );
-}
+}

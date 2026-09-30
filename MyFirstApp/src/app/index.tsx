@@ -4,10 +4,15 @@ import {
   TextInput,
   Pressable,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 
 import { useState } from 'react';
 import { Redirect } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '../context/AuthContext';
 
@@ -26,7 +31,7 @@ export default function LoginScreen() {
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#000000" />
+        <ActivityIndicator size="large" color="#111827" />
       </View>
     );
   }
@@ -40,12 +45,12 @@ export default function LoginScreen() {
     setError('');
 
     if (!name.trim() || !email.trim() || !password.trim()) {
-      setError('Please fill all fields.');
+      setError('Please fill in all fields.');
       return;
     }
 
-    if (!email.includes('@')) {
-      setError('Please enter a valid email.');
+    if (!email.includes('@') || !email.includes('.')) {
+      setError('Please enter a valid email address.');
       return;
     }
 
@@ -58,97 +63,126 @@ export default function LoginScreen() {
       setIsSubmitting(true);
       await login(name, email, password);
     } catch (err: any) {
-      setError(err?.message || 'Login failed. Please check credentials.');
+      setError(err?.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <View className="flex-1 justify-center bg-white px-6">
-      {/* Heading */}
-      <Text className="text-4xl font-bold text-black">
-        Welcome Back 👋
-      </Text>
-
-      <Text className="mb-8 mt-2 text-base text-gray-500">
-        Login or Sign Up with FastAPI Backend
-      </Text>
-
-      {/* Name */}
-      <Text className="mb-2 text-sm font-semibold text-black">
-        Full Name
-      </Text>
-
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        placeholder="Enter your name"
-        placeholderTextColor="#999"
-        className="rounded-xl border border-gray-300 px-4 py-4 text-black"
-      />
-
-      {/* Email */}
-      <Text className="mb-2 mt-5 text-sm font-semibold text-black">
-        Email
-      </Text>
-
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Enter your email"
-        placeholderTextColor="#999"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        className="rounded-xl border border-gray-300 px-4 py-4 text-black"
-      />
-
-      {/* Password */}
-      <Text className="mb-2 mt-5 text-sm font-semibold text-black">
-        Password
-      </Text>
-
-      <View className="flex-row items-center rounded-xl border border-gray-300">
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Enter your password"
-          placeholderTextColor="#999"
-          secureTextEntry={!showPassword}
-          className="flex-1 px-4 py-4 text-black"
-        />
-
-        <Pressable
-          className="px-4"
-          onPress={() => setShowPassword(!showPassword)}
-        >
-          <Text className="font-semibold text-black">
-            {showPassword ? 'Hide' : 'Show'}
-          </Text>
-        </Pressable>
-      </View>
-
-      {/* Error */}
-      {error ? (
-        <Text className="mt-3 text-sm text-red-500">
-          {error}
-        </Text>
-      ) : null}
-
-      {/* Login Button */}
-      <Pressable
-        className={`mt-7 rounded-xl py-4 ${isSubmitting ? 'bg-gray-400' : 'bg-black'}`}
-        onPress={handleLogin}
-        disabled={isSubmitting}
+    <SafeAreaView className="flex-1 bg-white" edges={['top', 'bottom']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1"
       >
-        {isSubmitting ? (
-          <ActivityIndicator size="small" color="#ffffff" />
-        ) : (
-          <Text className="text-center text-base font-bold text-white">
-            Continue / Login
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingHorizontal: 24,
+            paddingTop: 10,
+            paddingBottom: 70,
+          }}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Brand Logo Header matching Website Navbar */}
+          <View className="mb-8 items-center">
+            <View className="flex-row items-center">
+              <Text className="text-3xl font-black tracking-[3px] text-gray-900">
+                LUXE STORE
+              </Text>
+              <View className="ml-2 h-2.5 w-2.5 rounded-full bg-[#B89758]" />
+            </View>
+            <Text className="mt-2 text-xs font-semibold uppercase tracking-[2px] text-gray-400">
+              Exclusive Luxury & High Horology
+            </Text>
+          </View>
+
+        {/* Full Name Input */}
+        <View className="mb-4">
+          <Text className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-700">
+            Full Name
           </Text>
-        )}
-      </Pressable>
-    </View>
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter your name"
+            placeholderTextColor="#9CA3AF"
+            className="rounded-xl border border-gray-200 bg-[#FAFAFB] px-4 py-3.5 text-base text-gray-900"
+          />
+        </View>
+
+        {/* Email Input */}
+        <View className="mb-4">
+          <Text className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-700">
+            Email Address
+          </Text>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Enter your email"
+            placeholderTextColor="#9CA3AF"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            className="rounded-xl border border-gray-200 bg-[#FAFAFB] px-4 py-3.5 text-base text-gray-900"
+          />
+        </View>
+
+        {/* Password Input */}
+        <View className="mb-4">
+          <Text className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-700">
+            Password
+          </Text>
+          <View className="flex-row items-center rounded-xl border border-gray-200 bg-[#FAFAFB] pr-3">
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Enter your password"
+              placeholderTextColor="#9CA3AF"
+              secureTextEntry={!showPassword}
+              className="flex-1 px-4 py-3.5 text-base text-gray-900"
+            />
+            <Pressable
+              onPress={() => setShowPassword(!showPassword)}
+              hitSlop={8}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={20}
+                color="#6B7280"
+              />
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Error Alert */}
+        {error ? (
+          <View className="mb-2 rounded-xl bg-red-50 p-3">
+            <Text className="text-center text-xs font-bold text-red-600">
+              {error}
+            </Text>
+          </View>
+        ) : null}
+
+        {/* Login Button */}
+        <Pressable
+          className={`mt-4 flex-row items-center justify-center rounded-xl py-4 shadow-sm active:opacity-90 ${
+            isSubmitting ? 'bg-gray-400' : 'bg-black'
+          }`}
+          onPress={handleLogin}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text className="text-base font-bold text-white">
+              Continue to Store →
+            </Text>
+          )}
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  </SafeAreaView>
   );
 }

@@ -13,6 +13,7 @@ import { useAuth } from './AuthContext';
 
 type WishlistContextType = {
   wishlist: Product[];
+  isLoaded: boolean;
   addToWishlist: (product: Product) => Promise<void>;
   removeFromWishlist: (id: string) => Promise<void>;
   toggleWishlist: (product: Product) => Promise<void>;
@@ -179,6 +180,7 @@ export function WishlistProvider({
     <WishlistContext.Provider
       value={{
         wishlist,
+        isLoaded,
         addToWishlist,
         removeFromWishlist,
         toggleWishlist,

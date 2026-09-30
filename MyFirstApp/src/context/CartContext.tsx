@@ -24,6 +24,7 @@ type CartItem = Product & {
 
 type CartContextType = {
   cart: CartItem[];
+  isLoaded: boolean;
   addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (id: string) => void;
   increaseQuantity: (id: string) => void;
@@ -308,6 +309,7 @@ export function CartProvider({
     <CartContext.Provider
       value={{
         cart,
+        isLoaded,
         addToCart,
         removeFromCart,
         increaseQuantity,

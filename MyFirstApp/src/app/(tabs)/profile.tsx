@@ -45,22 +45,39 @@ export default function Profile() {
     user?.name?.trim()?.charAt(0).toUpperCase() || 'U';
 
   return (
-    <View className="flex-1 bg-gray-100">
-      {/* Top Navbar */}
-      <MinimalNavbar title="My Profile" showCart={true} />
+    <View className="flex-1 bg-[#FAFAFB]">
+      {/* Clean Top Navbar */}
+      <MinimalNavbar
+        brandText="LUXE STORE"
+        showWishlist={true}
+        showCart={true}
+        showProfile={true}
+        showMenu={true}
+      />
 
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          padding: 20,
+          paddingHorizontal: 16,
+          paddingTop: 12,
           paddingBottom: 40,
         }}
       >
-        {/* Profile Header */}
-        <View className="items-center rounded-3xl bg-white p-6 shadow-sm">
+        {/* Header Below Navbar */}
+        <View className="mb-4 px-0.5 pt-1">
+          <Text className="text-2xl font-black tracking-tight text-gray-900">
+            My Profile
+          </Text>
+          <Text className="mt-0.5 text-xs font-semibold text-gray-500">
+            Manage your personal account and preferences
+          </Text>
+        </View>
+
+        {/* Profile Card */}
+        <View className="items-center rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
           <View className="h-20 w-20 items-center justify-center rounded-full bg-black shadow-md">
-            <Text className="text-3xl font-extrabold text-white">
+            <Text className="text-3xl font-black text-white">
               {firstLetter}
             </Text>
           </View>
@@ -69,42 +86,46 @@ export default function Profile() {
             {user?.name || 'User'}
           </Text>
 
-          <Text className="mt-0.5 text-sm text-gray-500">
+          <Text className="mt-0.5 text-sm font-medium text-gray-500">
             {user?.email || ''}
           </Text>
         </View>
 
         {/* Account Details Box */}
-        <View className="mt-5 rounded-2xl bg-white p-5 shadow-sm">
+        <View className="mt-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
           <View className="flex-row items-center justify-between">
-            <Text className="text-base font-bold text-black">
+            <Text className="text-base font-extrabold text-black">
               Account Information
             </Text>
             <Pressable onPress={() => router.push('/edit-profile')}>
-              <Text className="text-sm font-semibold text-blue-600">Edit</Text>
+              <Text className="text-sm font-bold text-black underline">Edit</Text>
             </Pressable>
           </View>
 
           <View className="mt-3">
-            <Text className="text-xs text-gray-400">Full Name</Text>
-            <Text className="mt-0.5 text-sm font-semibold text-black">
+            <Text className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              Full Name
+            </Text>
+            <Text className="mt-0.5 text-sm font-bold text-black">
               {user?.name}
             </Text>
           </View>
 
           <View className="mt-2.5">
-            <Text className="text-xs text-gray-400">Email Address</Text>
-            <Text className="mt-0.5 text-sm font-semibold text-black">
+            <Text className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              Email Address
+            </Text>
+            <Text className="mt-0.5 text-sm font-bold text-black">
               {user?.email}
             </Text>
           </View>
         </View>
 
-        {/* Actions List */}
-        <View className="mt-5">
+        {/* Navigation Actions List */}
+        <View className="mt-4">
           {/* Edit Profile */}
           <Pressable
-            className="mb-3 flex-row items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
+            className="mb-3 flex-row items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm active:bg-gray-50"
             onPress={() => router.push('/edit-profile')}
           >
             <View className="flex-row items-center">
@@ -116,7 +137,7 @@ export default function Profile() {
 
           {/* My Addresses */}
           <Pressable
-            className="mb-3 flex-row items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
+            className="mb-3 flex-row items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm active:bg-gray-50"
             onPress={() => router.push('/addresses')}
           >
             <View className="flex-row items-center">
@@ -130,7 +151,7 @@ export default function Profile() {
 
           {/* My Orders */}
           <Pressable
-            className="mb-3 flex-row items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
+            className="mb-3 flex-row items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm active:bg-gray-50"
             onPress={() => router.push('/orders')}
           >
             <View className="flex-row items-center">
@@ -144,7 +165,7 @@ export default function Profile() {
 
           {/* Wishlist */}
           <Pressable
-            className="mb-3 flex-row items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
+            className="mb-3 flex-row items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm active:bg-gray-50"
             onPress={() => router.push('/(tabs)/wishlist')}
           >
             <View className="flex-row items-center">
@@ -158,7 +179,7 @@ export default function Profile() {
 
           {/* Logout */}
           <Pressable
-            className="mt-3 rounded-2xl bg-red-500 py-4"
+            className="mt-3 rounded-2xl bg-red-500 py-4 shadow-sm active:opacity-90"
             onPress={handleLogout}
           >
             <Text className="text-center font-bold text-white">

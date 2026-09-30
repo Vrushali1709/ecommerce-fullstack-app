@@ -13,13 +13,11 @@ import { router } from 'expo-router';
 interface AppFooterProps {
   onScrollToTop?: () => void;
   showNewsletter?: boolean;
-  showFeatures?: boolean;
 }
 
 export default function AppFooter({
   onScrollToTop,
   showNewsletter = true,
-  showFeatures = true,
 }: AppFooterProps) {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -48,44 +46,7 @@ export default function AppFooter({
 
   return (
     <View style={styles.container}>
-      {/* 1. Trust & Value Proposition Badges */}
-      {showFeatures && (
-        <View style={styles.featuresGrid}>
-          <View style={styles.featureCard}>
-            <View style={styles.featureIconWrapper}>
-              <Ionicons name="flash-outline" size={20} color="#111827" />
-            </View>
-            <Text style={styles.featureTitle}>Fast Delivery</Text>
-            <Text style={styles.featureDesc}>Free shipping over $100</Text>
-          </View>
-
-          <View style={styles.featureCard}>
-            <View style={styles.featureIconWrapper}>
-              <Ionicons name="shield-checkmark-outline" size={20} color="#111827" />
-            </View>
-            <Text style={styles.featureTitle}>Secure Payments</Text>
-            <Text style={styles.featureDesc}>100% encrypted & safe</Text>
-          </View>
-
-          <View style={styles.featureCard}>
-            <View style={styles.featureIconWrapper}>
-              <Ionicons name="refresh-outline" size={20} color="#111827" />
-            </View>
-            <Text style={styles.featureTitle}>Easy Returns</Text>
-            <Text style={styles.featureDesc}>7-day return policy</Text>
-          </View>
-
-          <View style={styles.featureCard}>
-            <View style={styles.featureIconWrapper}>
-              <Ionicons name="headset-outline" size={20} color="#111827" />
-            </View>
-            <Text style={styles.featureTitle}>24/7 Support</Text>
-            <Text style={styles.featureDesc}>Always ready to help</Text>
-          </View>
-        </View>
-      )}
-
-      {/* 2. Newsletter Signup */}
+      {/* 1. Newsletter Signup */}
       {showNewsletter && (
         <View style={styles.newsletterCard}>
           <View style={styles.newsletterHeader}>
@@ -298,41 +259,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 32,
     paddingBottom: 24,
-  },
-  // Features Grid
-  featuresGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    marginBottom: 24,
-  },
-  featureCard: {
-    flexBasis: '48%',
-    flexGrow: 1,
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#F3F4F6',
-  },
-  featureIconWrapper: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: '#F9FAFB',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  featureTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#111827',
-  },
-  featureDesc: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 2,
   },
 
   // Newsletter Card

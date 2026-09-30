@@ -1,32 +1,25 @@
 import React, { useRef } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  Pressable,
-  Animated,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Product } from '../data/products';
 import { useWishlist } from '../context/WishlistContext';
 
-type ProductCardProps = {
+interface BestSellerCardProps {
   product: Product;
   onPress: () => void;
   onAddToCart: () => void;
-  onBuyNow?: () => void;
-};
+}
 
-export default function ProductCard({
+export default function BestSellerCard({
   product,
   onPress,
   onAddToCart,
-}: ProductCardProps) {
+}: BestSellerCardProps) {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const saved = isInWishlist(product.id);
 
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const bagButtonScale = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
@@ -43,6 +36,21 @@ export default function ProductCard({
     }).start();
   };
 
+  const handleBagPressIn = () => {
+    Animated.spring(bagButtonScale, {
+      toValue: 0.88,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleBagPressOut = () => {
+    Animated.spring(bagButtonScale, {
+      toValue: 1,
+      friction: 3,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <Animated.View
       style={[
@@ -52,7 +60,7 @@ export default function ProductCard({
         },
       ]}
     >
-      {/* Product Image + Badges */}
+      {/* Product Image & Badges */}
       <View style={styles.imageContainer}>
         <Pressable
           onPress={onPress}
@@ -76,7 +84,7 @@ export default function ProductCard({
           </View>
         ) : null}
 
-        {/* Wishlist Quick Toggle Button */}
+        {/* Wishlist Button */}
         <Pressable
           style={styles.wishlistButton}
           onPress={() => toggleWishlist(product)}
@@ -90,10 +98,11 @@ export default function ProductCard({
         </Pressable>
       </View>
 
-      {/* Product Details with Locked Title Height for Consistent Alignment */}
-      <Pressable onPress={onPress} style={styles.detailsContainer}>
+      {/* Product Details & Add to Bag Action */}
+      <View style={styles.infoContainer}>
+        {/* Category & Rating */}
         <View style={styles.categoryRow}>
-          <Text style={styles.categoryText} numberOfLines={1}>
+          <Text style={styles.category} numberOfLines={1}>
             {product.category}
           </Text>
 
@@ -103,33 +112,42 @@ export default function ProductCard({
           </View>
         </View>
 
-        <View style={styles.titleContainer}>
-          <Text style={styles.nameText} numberOfLines={2}>
+        {/* Product Name */}
+        <Pressable onPress={onPress}>
+          <Text style={styles.name} numberOfLines={1}>
             {product.name}
           </Text>
-        </View>
-
-        <View style={styles.priceRow}>
-          <Text style={styles.priceText}>{product.price}</Text>
-          {product.originalPrice ? (
-            <Text style={styles.originalPriceText}>
-              {product.originalPrice}
-            </Text>
-          ) : null}
-        </View>
-      </Pressable>
-
-      {/* Action Button: Single Full-Width "Add to Cart" Pill */}
-      <View style={styles.actionBox}>
-        <Pressable
-          onPress={onAddToCart}
-          style={styles.addToCartBtn}
-        >
-          <Ionicons name="cart-outline" size={16} color="#FFFFFF" />
-          <Text style={styles.addToCartBtnText}>
-            Add to Cart
-          </Text>
         </Pressable>
+
+        {/* Price & Prominent Circular Add to Bag Button Row */}
+        <View style={styles.bottomRow}>
+          <View style={styles.priceContainer}>
+            <Text style={styles.price}>{product.price}</Text>
+            {product.originalPrice ? (
+              <Text style={styles.originalPrice}>{product.originalPrice}</Text>
+            ) : null}
+          </View>
+
+          {/* Quick Add to Bag Circular Button */}
+          <Animated.View
+            style={{
+              transform: [{ scale: bagButtonScale }],
+            }}
+          >
+            <Pressable
+              onPress={onAddToCart}
+              onPressIn={handleBagPressIn}
+              onPressOut={handleBagPressOut}
+              style={styles.addBagButton}
+              accessibilityLabel={`Add ${product.name} to bag`}
+            >
+              <Ionicons name="bag-handle" size={18} color="#FFFFFF" />
+              <View style={styles.plusBadge}>
+                <Ionicons name="add" size={10} color="#111827" />
+              </View>
+            </Pressable>
+          </Animated.View>
+        </View>
       </View>
     </Animated.View>
   );
@@ -137,21 +155,22 @@ export default function ProductCard({
 
 const styles = StyleSheet.create({
   card: {
+    width: 228,
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
+    borderRadius: 22,
+    marginRight: 14,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB',
+    borderColor: '#F1F2F4',
     overflow: 'hidden',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-    marginBottom: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 3,
   },
   imageContainer: {
     width: '100%',
-    height: 175,
+    height: 185,
     position: 'relative',
     backgroundColor: '#F8F9FA',
   },
@@ -173,7 +192,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 2,
   },
@@ -187,22 +206,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 3,
   },
-  detailsContainer: {
-    paddingHorizontal: 12,
-    paddingTop: 10,
-    paddingBottom: 8,
+  infoContainer: {
+    paddingHorizontal: 14,
+    paddingTop: 12,
+    paddingBottom: 14,
     backgroundColor: '#FFFFFF',
   },
   categoryRow: {
@@ -211,8 +230,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 4,
   },
-  categoryText: {
-    fontSize: 10,
+  category: {
+    fontSize: 10.5,
     fontWeight: '700',
     color: '#9CA3AF',
     textTransform: 'uppercase',
@@ -228,61 +247,63 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   ratingText: {
-    fontSize: 10.5,
+    fontSize: 11,
     fontWeight: '700',
     color: '#92400E',
   },
-  titleContainer: {
-    height: 36,
-    justifyContent: 'flex-start',
-  },
-  nameText: {
-    fontSize: 13.5,
+  name: {
+    fontSize: 14.5,
     fontWeight: '700',
     color: '#111827',
-    lineHeight: 18,
+    lineHeight: 19,
+    marginBottom: 8,
   },
-  priceRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 5,
-    marginTop: 4,
-  },
-  priceText: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#111827',
-  },
-  originalPriceText: {
-    fontSize: 11,
-    color: '#9CA3AF',
-    textDecorationLine: 'line-through',
-  },
-  actionBox: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-  },
-  addToCartBtn: {
-    width: '100%',
-    height: 38,
-    backgroundColor: '#111827',
-    borderRadius: 10,
+  bottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 3,
+    justifyContent: 'space-between',
+    marginTop: 2,
   },
-  addToCartBtnText: {
-    color: '#FFFFFF',
-    fontSize: 12.5,
-    fontWeight: '800',
-    marginLeft: 6,
+  priceContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  price: {
+    fontSize: 16.5,
+    fontWeight: '900',
+    color: '#111827',
+  },
+  originalPrice: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textDecorationLine: 'line-through',
+    marginTop: 1,
+  },
+  addBagButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#111827',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 4,
+  },
+  plusBadge: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#B89758',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
   },
 });
