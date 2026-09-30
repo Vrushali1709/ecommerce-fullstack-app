@@ -14,6 +14,7 @@
     },
 
     "android": {
+      "package": "com.vrushali.ecommerceapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundColor": "#FAFAFB"
@@ -37,6 +38,11 @@
           "backgroundColor": "#FAFAFB"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "11d0fa48-1657-40e1-90c7-cce7d23d6812"
+      }
+    }
   }
 }
